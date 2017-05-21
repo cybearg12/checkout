@@ -1,0 +1,14 @@
+
+Store/.vs/Store/v14/.suo
+*.cache
+Store/Store.Checkout/obj/Debug
+Store/Store.Checkout/bin/Debug
+/Store/Store.Test/obj/Debug
+/Store/Store.Client.UI/bin/Debug
+/Store/Store.Client.UI/obj/Debug
+/Store/Store.Checkout/bin/Debug
+/Store/Store.Pricing/bin/Debug
+/Store/Store.Pricing/obj/Debug
+/Store/Store.Stock/bin/Debug
+/Store/Store.Stock/obj/Debug
+/Store/Store.Test/bin/Debug
