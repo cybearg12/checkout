@@ -13,7 +13,7 @@ namespace Store.Test
         private List<DiscountGroup> _discountGroups;
         private decimal _discountPrice;
 
-        public void ForItems(List<StockKeepingUnit> items)
+        public DiscountRuleBuilder ForItems(List<StockKeepingUnit> items)
         {
             _discountGroups = new List<DiscountGroup>();
             foreach (var itemGroup in items.GroupBy(i => i.Name))
@@ -21,13 +21,15 @@ namespace Store.Test
                 DiscountGroup gr = new DiscountGroup { Item = itemGroup.First(), Quantity = itemGroup.Count() };
                 _discountGroups.Add(gr);
             }
+
+            return this;
         }
 
-        public void WithPrice(decimal price)
+        public DiscountRuleBuilder WithPrice(decimal price)
         {
             _discountPrice = price;
-        }
-              
+            return this;
+        }              
 
         public DiscountRule Build()
         {

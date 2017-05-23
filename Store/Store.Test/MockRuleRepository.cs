@@ -9,18 +9,17 @@ using System.Threading.Tasks;
 namespace Store.Test
 {
     public class MockRuleRepository : IRuleRepository
-    {
-        
-        private List<DiscountRule> _mockRules = new List<DiscountRule>();
-
+    {   
         public MockRuleRepository()
         {
-           
+            MockRules = new List<DiscountRule>();
         }
 
         public IEnumerable<DiscountRule> GetRules()
         {
-            throw new NotImplementedException();
-        }
+            return MockRules;
+        }     
+        
+        public List<DiscountRule> MockRules { get; set; }   
     }
 }
