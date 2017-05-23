@@ -9,7 +9,7 @@ namespace Store.Checkout
 {
     public class CheckoutController : ICheckout
     {
-        private readonly List<StockKeepingUnit> _basket = new List<StockKeepingUnit>();
+        private readonly List<ItemPile> _basket = new List<ItemPile>();
         private readonly IUnitRepository _unitRepository;
 
         public CheckoutController(IUnitRepository unitRepository)
@@ -26,7 +26,16 @@ namespace Store.Checkout
             if (unit == null)
                 throw new Exception($"Item {item} does not exist in stock.");
 
-            _basket.Add(unit);
+            ItemPile existingPile = _basket.FirstOrDefault(p => p.Unit == unit);
+
+            if (existingPile != null)
+            {
+                existingPile.Quantity++;
+            }
+            else
+            {
+                _basket.Add(new ItemPile(unit, 1));
+            }
         }
 
         public decimal GetTotalPrice()

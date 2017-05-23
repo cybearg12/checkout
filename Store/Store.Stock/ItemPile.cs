@@ -4,16 +4,16 @@
     {
         public ItemPile(StockKeepingUnit unit, int quantity)
         {
-            Item = unit;
+            Unit = unit;
             Quantity = quantity;
         }
 
-        public StockKeepingUnit Item { get; private set; }
-        public int Quantity { get; private set; }
+        public StockKeepingUnit Unit { get; private set; }
+        public int Quantity { get; set; }
 
         public decimal Price
         {
-            get { return Item.Price * Quantity; }
+            get { return Unit.Price * Quantity; }
         }
         
     }
