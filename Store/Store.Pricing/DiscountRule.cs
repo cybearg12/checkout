@@ -9,12 +9,14 @@ namespace Store.Pricing
 {
     public class DiscountRule
     {
-        public List<DiscountGroup> Items { get; set; }
+        public List<ItemPile> ItemGroups { get; set; }
         public decimal Price { get; set; }
 
         public DiscountRule()
         {
-            Items = new List<DiscountGroup>();
-        }                
+            ItemGroups = new List<ItemPile>();
+        }     
+                
     }
+
 }

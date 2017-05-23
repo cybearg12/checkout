@@ -9,6 +9,6 @@ namespace Store.Pricing
 {
     public interface IPricing
     {
-        decimal GetDiscountedPrice(List<StockKeepingUnit> items);
+        decimal GetDiscountedPrice(List<ItemPile> itemPiles);
     }
 }

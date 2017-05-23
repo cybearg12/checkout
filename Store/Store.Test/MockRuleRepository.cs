@@ -18,8 +18,13 @@ namespace Store.Test
         public IEnumerable<DiscountRule> GetRules()
         {
             return MockRules;
-        }     
-        
+        }
+
+        public IEnumerable<DiscountRule> GetRulesForItems(List<StockKeepingUnit> items)
+        {
+            throw new NotImplementedException();
+        }
+
         public List<DiscountRule> MockRules { get; set; }   
     }
 }

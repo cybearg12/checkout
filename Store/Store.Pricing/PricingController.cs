@@ -16,12 +16,12 @@ namespace Store.Pricing
             _ruleRepository = repository;
         }
 
-        public decimal GetDiscountedPrice(List<StockKeepingUnit> items)
+        public decimal GetDiscountedPrice(List<ItemPile> itemPiles)
         {
-            if (items == null || items.Count == 0)
+            if (itemPiles == null || itemPiles.Count == 0)
                 throw new ArgumentException("Items collection is empty");
 
-            return items.Sum(i => i.Price);            
+            return itemPiles.Sum(p => p.Price);            
         }
     }
 }

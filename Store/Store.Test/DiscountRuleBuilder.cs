@@ -10,17 +10,12 @@ namespace Store.Test
 {
     public class DiscountRuleBuilder
     {
-        private List<DiscountGroup> _discountGroups;
+        private List<ItemPile> _itemPiles;
         private decimal _discountPrice;
 
-        public DiscountRuleBuilder ForItems(List<StockKeepingUnit> items)
+        public DiscountRuleBuilder ForItems(List<ItemPile> piles)
         {
-            _discountGroups = new List<DiscountGroup>();
-            foreach (var itemGroup in items.GroupBy(i => i.Name))
-            {
-                DiscountGroup gr = new DiscountGroup { Item = itemGroup.First(), Quantity = itemGroup.Count() };
-                _discountGroups.Add(gr);
-            }
+            _itemPiles = piles;          
 
             return this;
         }
@@ -35,7 +30,7 @@ namespace Store.Test
         {
             DiscountRule result = new DiscountRule
             {
-                Items = _discountGroups,
+                ItemGroups = _itemPiles,
                 Price = _discountPrice
             };
 

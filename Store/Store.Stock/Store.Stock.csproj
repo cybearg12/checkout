@@ -50,6 +50,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="ItemPile.cs" />
     <Compile Include="IUnitRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StockKeepingUnit.cs" />
