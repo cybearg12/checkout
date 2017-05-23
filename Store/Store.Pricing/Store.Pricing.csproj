@@ -43,6 +43,7 @@
     <Compile Include="DiscountRule.cs" />
     <Compile Include="DiscountUnit.cs" />
     <Compile Include="IPricing.cs" />
+    <Compile Include="IRuleRepository.cs" />
     <Compile Include="PricingController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

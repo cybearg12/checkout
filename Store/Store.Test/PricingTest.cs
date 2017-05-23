@@ -13,12 +13,14 @@ namespace Store.Test
 {
     public class PricingTest
     {
-        private readonly IUnitRepository _mockRepository = new MockUnitRepository();
+        private readonly DiscountRuleBuilder ruleBuilder = new DiscountRuleBuilder();
+        private readonly IRuleRepository _mockRuleRepository = new MockRuleRepository();
+         
         private IPricing _pricing;
 
         public PricingTest()
         {
-            _pricing = new PricingController();
+            _pricing = new PricingController(_mockRuleRepository);            
         }
 
         [Fact]
@@ -29,6 +31,20 @@ namespace Store.Test
             
             decimal result =_pricing.GetDiscountedPrice(basket);
             result.Should().Be(50);            
+        }
+
+        [Fact]
+        public void GetDiscount_Price_For_Empty_List_Throws_Errors()
+        {
+            try
+            {
+                decimal result = _pricing.GetDiscountedPrice(new List<StockKeepingUnit>());
+            }
+            catch (ArgumentException e)
+            {
+                Assert.True(true);
+            }           
+            
         }
     }
 }

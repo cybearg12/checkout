@@ -9,9 +9,19 @@ namespace Store.Pricing
 {
     public class PricingController : IPricing
     {
+        private readonly IRuleRepository _ruleRepository;
+
+        public PricingController(IRuleRepository repository)
+        {
+            _ruleRepository = repository;
+        }
+
         public decimal GetDiscountedPrice(List<StockKeepingUnit> items)
         {
-            throw new NotImplementedException();
+            if (items == null || items.Count == 0)
+                throw new ArgumentException("Items collection is empty");
+
+            return items.Sum(i => i.Price);            
         }
     }
 }

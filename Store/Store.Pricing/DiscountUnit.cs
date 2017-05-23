@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Store.Pricing
 {
-    public class DiscountUnit
+    public class DiscountGroup
     {
         public StockKeepingUnit Item { get; set; }
         public int Quantity { get; set; }
