@@ -9,7 +9,7 @@ namespace Store.Checkout
 {
     public class CheckoutController : ICheckout
     {
-        private readonly List<StockKeepingUnit> _basket;
+        private readonly List<StockKeepingUnit> _basket = new List<StockKeepingUnit>();
         private readonly IUnitRepository _unitRepository;
 
         public CheckoutController(IUnitRepository unitRepository)
@@ -19,7 +19,14 @@ namespace Store.Checkout
 
         public void Scan(string item)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrWhiteSpace(item))
+                throw new ArgumentNullException(nameof(item)); //if this was a web api controller it should return a Bad Request
+
+            StockKeepingUnit unit = _unitRepository.GetByName(item);
+            if (unit == null)
+                throw new Exception($"Item {item} does not exist in stock.");
+
+            _basket.Add(unit);
         }
 
         public decimal GetTotalPrice()
