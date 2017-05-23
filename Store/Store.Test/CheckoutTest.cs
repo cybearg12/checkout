@@ -70,12 +70,12 @@ namespace Store.Test
         public void Checkout_Should_Return_Total_Price()
         {            
             ICheckout checkout = new CheckoutController(_mockRepository);
-            checkout.Scan("A");
-            checkout.Scan("B");
-            checkout.Scan("A");
+            checkout.Scan("A"); //50
+            checkout.Scan("B"); //30
+            checkout.Scan("A"); //50
 
             decimal result = checkout.GetTotalPrice();
-            result.Should().NotBe(null);
+            result.Should().Be(130);
         }
     }
 }

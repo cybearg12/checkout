@@ -31,7 +31,10 @@ namespace Store.Checkout
 
         public decimal GetTotalPrice()
         {
+            //if (_basket.Count == 0)
+            //    return 0;
             throw new NotImplementedException();
+
         }
     }
 }
