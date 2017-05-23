@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Store.Stock;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,12 +9,20 @@ namespace Store.Checkout
 {
     public class CheckoutController : ICheckout
     {
-        public decimal GetTotalPrice()
+        private readonly List<StockKeepingUnit> _basket;
+        private readonly IUnitRepository _unitRepository;
+
+        public CheckoutController(IUnitRepository unitRepository)
+        {
+            _unitRepository = unitRepository;
+        }
+
+        public void Scan(string item)
         {
             throw new NotImplementedException();
         }
 
-        public void Scan(string item)
+        public decimal GetTotalPrice()
         {
             throw new NotImplementedException();
         }
