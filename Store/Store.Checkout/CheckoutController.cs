@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Store.Pricing;
 
 namespace Store.Checkout
 {
@@ -11,10 +12,12 @@ namespace Store.Checkout
     {
         private readonly List<ItemPile> _basket = new List<ItemPile>();
         private readonly IUnitRepository _unitRepository;
+        private readonly IPricing _pricing;
 
-        public CheckoutController(IUnitRepository unitRepository)
+        public CheckoutController(IUnitRepository unitRepository, IPricing pricingService ) //todo: inject logging
         {
             _unitRepository = unitRepository;
+            _pricing = pricingService;
         }
 
         public void Scan(string item)
@@ -40,10 +43,17 @@ namespace Store.Checkout
 
         public decimal GetTotalPrice()
         {
-            //if (_basket.Count == 0)
-            //    return 0;
-            throw new NotImplementedException();
+            decimal totalPrice = 0;
+            try
+            {
+                totalPrice = _pricing.GetDiscountedPrice(_basket);
+            }
+            catch (Exception e)
+            {
+                throw; //TODO: logging
+            }
 
+            return totalPrice;
         }
     }
 }

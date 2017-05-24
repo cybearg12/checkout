@@ -45,6 +45,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Store.Pricing\Store.Pricing.csproj">
+      <Project>{BCC6118F-CF71-4CD3-B517-27473D543A4C}</Project>
+      <Name>Store.Pricing</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Store.Stock\Store.Stock.csproj">
       <Project>{7363ebb9-730d-47f7-b53b-420bcd812173}</Project>
       <Name>Store.Stock</Name>

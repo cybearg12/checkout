@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Store.Checkout;
+using Store.Pricing;
 using Store.Stock;
 using Xunit;
 
@@ -13,10 +14,14 @@ namespace Store.Test
     public class CheckoutTest
     {
         private readonly IUnitRepository _mockRepository = new MockUnitRepository();
+        private readonly IRuleRepository _ruleRepository = new MockRuleRepository();
+        private readonly IPricing _pricingService;
         private ICheckout _checkout;
+
         public CheckoutTest()
         {
-            _checkout = new CheckoutController(_mockRepository);
+            _pricingService = new PricingController(_ruleRepository);
+            _checkout = new CheckoutController(_mockRepository, _pricingService);
         }
 
         [Fact]
@@ -73,7 +78,19 @@ namespace Store.Test
         [Fact]            
         public void Checkout_Should_Return_Total_Price()
         {            
-            ICheckout checkout = new CheckoutController(_mockRepository);
+            ICheckout checkout = new CheckoutController(_mockRepository, _pricingService);
+            checkout.Scan("A"); //50
+            checkout.Scan("B"); //30
+            checkout.Scan("A"); //50
+
+            decimal result = checkout.GetTotalPrice();
+            result.Should().Be(130);
+        }
+
+        [Fact]
+        public void Checkout_Should_Return_Price_With_Discount()
+        {
+            ICheckout checkout = new CheckoutController(_mockRepository, _pricingService);
             checkout.Scan("A"); //50
             checkout.Scan("B"); //30
             checkout.Scan("A"); //50
