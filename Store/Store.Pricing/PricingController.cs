@@ -16,47 +16,39 @@ namespace Store.Pricing
             _ruleRepository = repository;
         }
 
-        public decimal GetDiscountedPrice(List<ItemPile> basket)
+        public decimal GetDiscountedPrice(List<ItemPile> basketItems)
         {
-            if (basket == null || basket.Count == 0)
+            if (basketItems == null || basketItems.Count == 0)
                 throw new ArgumentException("Items collection is empty");
             List<DiscountRule> appliedRules = new List<DiscountRule>();
 
             List<DiscountRule> allRules = _ruleRepository.GetRules().ToList(); //TODO: get only the rules which contain only items in the basket
             
-            //apply the discount rules to the basket; TODO: this modified the state of the basket!
-            foreach(DiscountRule currentRule in allRules)
+            List<ItemPile> discountedBasket = new List<ItemPile>(basketItems.Select(p => p.Copy())); //create a copy of the basket
+            foreach (DiscountRule currentRule in allRules)
             {
-                if(IsMatchingRule(basket, currentRule))
+                if(IsMatchingRule(discountedBasket, currentRule))
                 {
-                    basket = ApplyDiscountRule(basket, currentRule);
+                    ApplyDiscountRule(discountedBasket, currentRule);
                     appliedRules.Add(currentRule);
                 }    
             }            
 
-            return basket.Sum(p => p.Price) + appliedRules.Sum(r => r.Price);            
+            return discountedBasket.Sum(p => p.Price) + appliedRules.Sum(r => r.Price);  // TODO: this could change
         }
 
-        private List<ItemPile> ApplyDiscountRule(List<ItemPile> basket, DiscountRule currentRule)
+        private void ApplyDiscountRule(List<ItemPile> basket, DiscountRule currentRule)
         {
-            List<ItemPile> discountedBasket = new List<ItemPile>();
-
             foreach (var basketPile in basket)
             {
                 ItemPile rulePile = currentRule.Piles.FirstOrDefault(p => p.Unit == basketPile.Unit);
                 if (rulePile != null)
                 {
-                    ItemPile discountedPile = new ItemPile(basketPile.Unit, basketPile.Quantity - rulePile.Quantity);
-                    discountedBasket.Add(discountedPile);
+                    basketPile.RemoveFromPile(rulePile.Quantity);
                 }
-                else
-                {
-                    discountedBasket.Add(basketPile.Copy());
-                }        
             }
-
-            return discountedBasket;
         }
+        
 
         public bool IsMatchingRule(List<ItemPile> basket, DiscountRule rule)
         {

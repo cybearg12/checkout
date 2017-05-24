@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Xunit;
 using FluentAssertions;
 using Store.Checkout;
 using Store.Stock;
+using Xunit;
 
 namespace Store.Test
 {    
@@ -30,6 +30,7 @@ namespace Store.Test
             {
                 Assert.False(true);
             }            
+            Assert.True(true);
         }
 
         [Fact]
@@ -47,6 +48,8 @@ namespace Store.Test
             {
                 Assert.False(true);
             }
+
+            Assert.True(true);
         }
 
         [Fact]
@@ -64,9 +67,10 @@ namespace Store.Test
             {
                 Assert.False(true);
             }
+            Assert.True(true);
         }        
 
-        [Theory]            
+        [Fact]            
         public void Checkout_Should_Return_Total_Price()
         {            
             ICheckout checkout = new CheckoutController(_mockRepository);

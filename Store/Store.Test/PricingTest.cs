@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Xunit;
 using FluentAssertions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Store.Checkout;
 using Store.Stock;
 using Store.Pricing;
+using Xunit;
+using Assert = Xunit.Assert;
 
 namespace Store.Test
 {
@@ -68,5 +70,32 @@ namespace Store.Test
             decimal result = _pricing.GetDiscountedPrice(basket);
             result.Should().Be(70);
         }
+
+        [Fact]
+        public void Get_Discount_Price_Does_Not_Change_Input_Basket()
+        {
+            var itemA = new StockKeepingUnit("A", 50);
+            var itemB = new StockKeepingUnit("B", 30);
+
+            List<ItemPile> rulePiles = new List<ItemPile>();
+            rulePiles.Add(new ItemPile(itemA, 2));
+            rulePiles.Add(new ItemPile(itemB, 1));
+
+            DiscountRule rule = _ruleBuilder.ForItems(rulePiles).WithPrice(70).Build();
+            _mockRuleRepository.MockRules = new List<DiscountRule> { rule };
+
+            List<ItemPile> basket = new List<ItemPile>();
+            basket.Add(new ItemPile(itemA, 3));
+            basket.Add(new ItemPile(itemB, 2));
+
+
+            decimal result = _pricing.GetDiscountedPrice(basket);
+            result.Should().Be(150);
+            basket.Count().Should().Be(2);
+            basket[0].Quantity.Should().Be(3);
+            basket[1].Quantity.Should().Be(2);
+        }
+
+
     }
 }
