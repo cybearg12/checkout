@@ -61,12 +61,12 @@ namespace Store.Test
             _mockRuleRepository.MockRules = new List<DiscountRule> { rule };
 
             List<ItemPile> basket = new List<ItemPile>();
-            basket.Add(new ItemPile(itemA, 1));
+            basket.Add(new ItemPile(itemA, 2));
             basket.Add(new ItemPile(itemB, 1));
-            basket.Add(new ItemPile(itemA, 1));
+            
 
             decimal result = _pricing.GetDiscountedPrice(basket);
-            result.Should().Be(100);
+            result.Should().Be(70);
         }
     }
 }
