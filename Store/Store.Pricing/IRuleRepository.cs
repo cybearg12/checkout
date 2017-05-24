@@ -9,7 +9,6 @@ namespace Store.Pricing
 {
     public interface IRuleRepository
     {
-        IEnumerable<DiscountRule> GetRules();
-        IEnumerable<DiscountRule> GetRulesForItems(List<StockKeepingUnit> items);
+        IEnumerable<DiscountRule> GetRules();        
     }
 }

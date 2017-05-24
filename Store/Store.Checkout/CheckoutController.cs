@@ -30,7 +30,7 @@ namespace Store.Checkout
 
             if (existingPile != null)
             {
-                existingPile.Quantity++;
+                existingPile.AddToPile(1);
             }
             else
             {

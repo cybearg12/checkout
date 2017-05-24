@@ -9,12 +9,17 @@ namespace Store.Pricing
 {
     public class DiscountRule
     {
-        public List<ItemPile> ItemGroups { get; set; }
+        public List<ItemPile> Piles { get; set; }
         public decimal Price { get; set; }
 
         public DiscountRule()
         {
-            ItemGroups = new List<ItemPile>();
+            Piles = new List<ItemPile>();
+        }
+        
+        public bool ContainsUnits(List<StockKeepingUnit> units)
+        {
+            return false;
         }     
                 
     }

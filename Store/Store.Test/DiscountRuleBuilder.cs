@@ -30,7 +30,7 @@ namespace Store.Test
         {
             DiscountRule result = new DiscountRule
             {
-                ItemGroups = _itemPiles,
+                Piles = _itemPiles,
                 Price = _discountPrice
             };
 

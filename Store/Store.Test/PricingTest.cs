@@ -53,15 +53,19 @@ namespace Store.Test
             var itemA = new StockKeepingUnit("A", 50);
             var itemB = new StockKeepingUnit("B", 30);
 
-            List<ItemPile> piles = new List<ItemPile>();
-            piles.Add(new ItemPile(itemA, 1));
-            piles.Add(new ItemPile(itemB, 1));
-            piles.Add(new ItemPile(itemA, 1));           
+            List<ItemPile> rulePiles = new List<ItemPile>();
+            rulePiles.Add(new ItemPile(itemA, 2));
+            rulePiles.Add(new ItemPile(itemB, 1));             
 
-            DiscountRule rule = _ruleBuilder.ForItems(piles).WithPrice(70).Build();
+                        DiscountRule rule = _ruleBuilder.ForItems(rulePiles).WithPrice(70).Build();
             _mockRuleRepository.MockRules = new List<DiscountRule> { rule };
 
-            decimal result = _pricing.GetDiscountedPrice(piles);
+            List<ItemPile> basket = new List<ItemPile>();
+            basket.Add(new ItemPile(itemA, 1));
+            basket.Add(new ItemPile(itemB, 1));
+            basket.Add(new ItemPile(itemA, 1));
+
+            decimal result = _pricing.GetDiscountedPrice(basket);
             result.Should().Be(100);
         }
     }
