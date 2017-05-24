@@ -15,7 +15,6 @@ namespace Store.Test
 {
     public class PricingTest
     {
-        private readonly DiscountRuleBuilder _ruleBuilder = new DiscountRuleBuilder();
         private readonly MockRuleRepository _mockRuleRepository = new MockRuleRepository();
          
         private IPricing _pricing;
@@ -55,11 +54,7 @@ namespace Store.Test
             var itemA = new StockKeepingUnit("A", 50);
             var itemB = new StockKeepingUnit("B", 30);
 
-            List<ItemPile> rulePiles = new List<ItemPile>();
-            rulePiles.Add(new ItemPile(itemA, 2));
-            rulePiles.Add(new ItemPile(itemB, 1));             
-
-                        DiscountRule rule = _ruleBuilder.ForItems(rulePiles).WithPrice(70).Build();
+            DiscountRule rule = new DiscountRuleBuilder().WithUnits(itemA, 2).WithUnits(itemB, 1).WithPrice(70).Build();
             _mockRuleRepository.MockRules = new List<DiscountRule> { rule };
 
             List<ItemPile> basket = new List<ItemPile>();
@@ -72,16 +67,12 @@ namespace Store.Test
         }
 
         [Fact]
-        public void Get_Discount_Price_Does_Not_Change_Input_Basket()
+        public void Get_Discount_Price_Does_Not_Change_Input_Basket_Instance()
         {
             var itemA = new StockKeepingUnit("A", 50);
             var itemB = new StockKeepingUnit("B", 30);
 
-            List<ItemPile> rulePiles = new List<ItemPile>();
-            rulePiles.Add(new ItemPile(itemA, 2));
-            rulePiles.Add(new ItemPile(itemB, 1));
-
-            DiscountRule rule = _ruleBuilder.ForItems(rulePiles).WithPrice(70).Build();
+            DiscountRule rule = new DiscountRuleBuilder().WithUnits(itemA, 2).WithUnits(itemB, 1).WithPrice(70).Build();
             _mockRuleRepository.MockRules = new List<DiscountRule> { rule };
 
             List<ItemPile> basket = new List<ItemPile>();
@@ -94,6 +85,78 @@ namespace Store.Test
             basket.Count().Should().Be(2);
             basket[0].Quantity.Should().Be(3);
             basket[1].Quantity.Should().Be(2);
+        }
+
+        [Fact]
+        public void Get_Discount_Price_Ignores_Rules_For_Units_Not_In_Basket()
+        {
+            var itemA = new StockKeepingUnit("A", 50);
+            var itemB = new StockKeepingUnit("B", 30);
+            var itemC = new StockKeepingUnit("C", 30);
+
+            DiscountRule rule1 = new DiscountRuleBuilder().WithUnits(itemA, 2).WithUnits(itemB, 1).WithPrice(70).Build();
+            DiscountRule rule2 = new DiscountRuleBuilder().WithUnits(itemC, 2).WithPrice(50).Build();
+
+            _mockRuleRepository.MockRules = new List<DiscountRule> { rule1, rule2 };
+            
+            List<ItemPile> basket = new List<ItemPile>
+            {
+                new ItemPile(itemA, 3),
+                new ItemPile(itemB, 2)
+            };
+
+            decimal result = _pricing.GetDiscountedPrice(basket);
+            result.Should().Be(150);
+        }
+
+        [Fact]
+        public void Get_Discount_Price_Handles_Different_Rules_For_Same_Unit_When_Sufficient_Quantity_In_Basket()
+        {
+            var itemA = new StockKeepingUnit("A", 50);
+            var itemB = new StockKeepingUnit("B", 30);
+
+            // two A and one B for 70
+            DiscountRule rule1 = new DiscountRuleBuilder().WithUnits(itemA, 2).WithUnits(itemB, 1).WithPrice(70).Build();
+
+            // two A for 75
+            DiscountRule rule2 = new DiscountRuleBuilder().WithUnits(itemA, 2).WithPrice(75).Build();
+
+            _mockRuleRepository.MockRules = new List<DiscountRule> { rule1, rule2 };
+
+            List<ItemPile> basket = new List<ItemPile>
+            {
+                new ItemPile(itemA, 4),
+                new ItemPile(itemB, 2)
+            };
+
+            //both rules should be applied
+            decimal result = _pricing.GetDiscountedPrice(basket);
+            result.Should().Be(175);
+        }
+
+        [Fact]
+        public void Get_Discount_Price_Chooses_The_Best_Discount_For_Basket()
+        {
+            var itemA = new StockKeepingUnit("A", 50);
+            var itemB = new StockKeepingUnit("B", 30);
+
+            // two A for 75
+            DiscountRule rule1 = new DiscountRuleBuilder().WithUnits(itemA, 2).WithPrice(75).Build();
+
+            // two A and one B for 70
+            DiscountRule rule2 = new DiscountRuleBuilder().WithUnits(itemA, 2).WithUnits(itemB, 1).WithPrice(100).Build();
+
+            _mockRuleRepository.MockRules = new List<DiscountRule> { rule1, rule2 };
+
+            List<ItemPile> basket = new List<ItemPile>
+            {
+                new ItemPile(itemA, 2),
+                new ItemPile(itemB, 1)
+            };
+
+            //the rule which renders the smallest price is rule2
+            decimal result = _pricing.GetDiscountedPrice(basket);
+            result.Should().Be(175);
         }
 
 

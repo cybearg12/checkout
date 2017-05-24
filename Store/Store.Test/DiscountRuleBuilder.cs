@@ -10,8 +10,19 @@ namespace Store.Test
 {
     public class DiscountRuleBuilder
     {
-        private List<ItemPile> _itemPiles;
+        private List<ItemPile> _itemPiles = new List<ItemPile>();
         private decimal _discountPrice;
+
+        public DiscountRuleBuilder WithUnits(StockKeepingUnit unit, int quantity)
+        {
+            ItemPile existinPile = _itemPiles.FirstOrDefault(i => i.Unit == unit);
+            if (existinPile != null)
+                existinPile.AddToPile(quantity);
+            else 
+                _itemPiles.Add(new ItemPile(unit, quantity));
+
+            return this;
+        }
 
         public DiscountRuleBuilder ForItems(List<ItemPile> piles)
         {
